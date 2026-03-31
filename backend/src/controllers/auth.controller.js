@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const tokenBlacklistModel = require("../models/blacklist.model")
 
 
 
@@ -20,7 +21,7 @@ async function registerUserController(req, res) {
     const isUserAlreadyExists = await userModel.findOne({
         $or: [{ name }, { email }]
     })
-    
+
 
     if (isUserAlreadyExists) {
         return res.status(400).json({ message: "User with the same name or email already exists" })
@@ -90,4 +91,45 @@ async function loginUserController(req, res) {
     })
 }
 
-module.exports = { registerUserController, loginUserController }
+/**
+ * @name logoutUserControlller
+ * @description clear token from user and add the token in blacklist
+ * @access Public
+ */
+async function logoutUserControlller(req, res) {
+    const token = req.cookies.token
+
+    if (token) {
+        await tokenBlacklistModel.create({ token })
+    }
+
+    // console.log("TOKEN:", token)
+
+    res.clearCookie("token")
+
+    res.status(200).json({
+        message: "User logged out successfully"
+    })
+}
+
+/**
+ * @name getMeController
+ * @description get the current logged in user details, expecting token in cookies
+ * @access Private
+ */
+async function getMeController(req, res){
+    const user = await userModel.findById(req.user.id)
+
+    res.status(200).json({
+        message: "User details fetched successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
+        }
+    })
+}
+
+
+
+module.exports = { registerUserController, loginUserController, logoutUserControlller, getMeController}
