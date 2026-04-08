@@ -66,14 +66,14 @@ const preparationPlanSchema = new mongoose.Schema({
 })
 
 const interviewReportSchema = new mongoose.Schema({
-    jobDescription: {
+    jobdescription: {
         type: String,
         required: [true, "Job description is required"]
     },
     resume: {
         type: String,
     },
-    selfDescription: {
+    selfdescription: {
         type: String,
     },
     matchScore: {
@@ -84,7 +84,11 @@ const interviewReportSchema = new mongoose.Schema({
     technicalQuestions: [technicalQuestionSchema],
     behavioralQuestions: [behavioralQuestionSchema],
     skillGaps: [skillGapSchema],
-    preparationPlan: [preparationPlanSchema]
+    preparationPlan: [preparationPlanSchema],
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    }
 }, {
     timestamps: true
 })
