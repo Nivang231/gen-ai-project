@@ -1,4 +1,4 @@
-const {Router} = require("express")
+const { Router } = require("express")
 const authController = require("../controllers/auth.controller")
 const authMiddleware = require("../middleware/auth.middleware")
 
@@ -24,7 +24,7 @@ authRouter.post("/login", authController.loginUserController)
  * @description clear token from user and add the token in blacklist
  * @access Public
  */
-authRouter.get("/logout", authController.logoutUserControlller)
+authRouter.get("/logout", authController.logoutUserController)
 
 /**
  * @route GET /api/auth/get-me
